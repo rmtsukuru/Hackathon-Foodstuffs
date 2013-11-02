@@ -1,4 +1,10 @@
-<div id="map-canvas" style="height: 100%;">
+<%= form_tag(parse_query_url, method: "post") do %>
+  <%= text_field_tag :query %>
+  <%= submit_tag "Submit" %>
+<% end %>
+<div id="map-container">
+  <div id="map-canvas" style="height: 100%;">
+  </div>
 </div>
 
 <script type="text/javascript"
