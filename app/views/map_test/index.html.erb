@@ -1,0 +1,17 @@
+<div id="map-canvas" style="height: 100%;">
+</div>
+
+<script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByVkwWVJFsocv7FpCsCkdoY7K3z6yibw8&sensor=true">
+</script>
+<script type="text/javascript">
+  function initialize() {
+    var mapOptions = {
+      center: new google.maps.LatLng(39.982951, -82.999829),
+      zoom: 17,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    var map = new google.maps.Map($('#map-canvas')[0], mapOptions);
+  }
+  google.maps.event.addDomListener(window, 'load', initialize);
+</script>
