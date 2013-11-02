@@ -48,14 +48,14 @@ function initialize() {
 
 function handleNoGeolocation(errorFlag) {
   if (errorFlag) {
-    var content = 'Error: The Geolocation service failed.';
+    var content = 'Please allow your browser to share your location. Or let me tell you, Chinese food is the best. Go to Beijing!';
   } else {
     var content = 'Error: Your browser doesn\'t support geolocation.';
   }
 
   var options = {
     map: map,
-    position: new google.maps.LatLng(60, 105),
+    position: new google.maps.LatLng(39.9, 116.4),
     content: content
   };
 
