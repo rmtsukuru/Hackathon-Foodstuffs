@@ -89,6 +89,10 @@ class MapTestController < ApplicationController
         price_range.include? price
       end
     end
+
+    if @results['businesses'].empty?
+      @message = "No establishments in that price range available."
+    end
 	
     @results['businesses'].each do |business|
       address = URI::encode("#{business['location']['address'].join(', ')}, #{business['location']['city']}, #{business['location']['state_code']}")
