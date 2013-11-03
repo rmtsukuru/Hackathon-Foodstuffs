@@ -88,6 +88,8 @@ function handleNoGeolocation(errorFlag) {
 	  errorInfo.open(map,noGeoMarker);
   });
   map.setCenter(new google.maps.LatLng(39.9, 116.4));
+  map.setZoom(12);
+  $( "input" ).prop( "disabled", true );
 }
 
 
