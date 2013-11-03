@@ -1,9 +1,11 @@
-<%= form_tag(parse_query_url, method: "post") do %>
+<div id="user-input"><%= form_tag(parse_query_url, method: "post") do %>
   <%= hidden_field_tag :latitude, "" %>
   <%= hidden_field_tag :longitude, "" %>
-  <%= text_field_tag :query %>
+  <%= text_field_tag :query, '', id: "input-box"%>
   <%= submit_tag "Submit" %>
 <% end %>
+
+</div>
 <div id="map-container">
   <div id="map-canvas" style="height: 100%;">
   </div>
@@ -24,8 +26,6 @@ function initialize() {
   };
   map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
-
-  // Try HTML5 geolocation
   if(navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
 	    Latitude=position.coords.latitude;
@@ -34,10 +34,9 @@ function initialize() {
 	    $("form input[name='longitude']").val(Longitude);
         var pos = new google.maps.LatLng(Latitude,Longitude);
 
-        var infowindow = new google.maps.InfoWindow({
+        var marker = new google.maps.Marker({
         map: map,
-        position: pos,
-        content: 'You are here!'
+        position: pos
       });
 
       map.setCenter(pos);
@@ -52,9 +51,9 @@ function initialize() {
 
 function handleNoGeolocation(errorFlag) {
   if (errorFlag) {
-    var content = 'Please allow your browser to share your location. Or let me tell you, Chinese food is the best. Go to Beijing!';
+    //var content = 'Please allow your browser to share your location. Or let me tell you, Chinese food is the best. Go to Beijing!';
   } else {
-    var content = 'Error: Your browser doesn\'t support geolocation.';
+    //var content = 'Error: Your browser doesn\'t support geolocation.';
   }
 
   var options = {
