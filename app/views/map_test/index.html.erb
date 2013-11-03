@@ -62,9 +62,7 @@ function handleNoGeolocation(errorFlag) {
 	position: new google.maps.LatLng(39.9, 116.385),
 	icon: 'http://i998.photobucket.com/albums/af101/summer2028/beijing-face_zps08ba53fc.png'
   });
-  google.maps.event.addListener(marker, 'click', function() {
-    infowindow.open(map,marker);
-  });
+  
 
   //var infowindow = new google.maps.InfoWindow(options);
   map.setCenter(new google.maps.LatLng(39.9, 116.4));
