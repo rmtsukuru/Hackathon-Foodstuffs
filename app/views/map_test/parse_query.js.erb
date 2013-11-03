@@ -1,0 +1,27 @@
+      var infowindow = new google.maps.InfoWindow({
+        content: ''
+      });
+      $.each(markers, function(index, value) {
+        value.setMap(null);
+      });
+      markers = [];
+      var marker;
+      <% @results['businesses'].each do |business| %>
+        marker = new google.maps.Marker({
+	  position: new google.maps.LatLng(<%= business['location']['latitude'] %>, <%= business['location']['longitude'] %>),
+	  map: map,
+	  title: "<%= business['name'] %>"
+	});
+	google.maps.event.addListener(marker, 'click', function() {
+	  var text = '<%= link_to business['name'], business['url'] %><br />' +
+                     '<%= business['rating'] %> out of 5<br />' +
+                     '<%= business['location']['address'].join(" ") %><br />' +
+                     '<%= business['display_phone'] %>';
+	  infowindow.setOptions({
+	    content: text
+	  });
+	  var tempMarker = marker;
+	  infowindow.open(map, this);
+	});
+	markers.push(marker);
+      <% end %>

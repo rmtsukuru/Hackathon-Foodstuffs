@@ -23,5 +23,10 @@ class MapTestController < ApplicationController
       business['location']['latitude'] = geocode['results'].first['geometry']['location']['lat']
       business['location']['longitude'] = geocode['results'].first['geometry']['location']['lng']
     end
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 end
