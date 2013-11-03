@@ -48,6 +48,10 @@ class MapTestController < ApplicationController
     end
   end
 
+  def list_categories
+    @categories = yelp_categories.keys
+  end
+
   private
 
   def yelp_categories
