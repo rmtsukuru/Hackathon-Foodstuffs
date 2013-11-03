@@ -3,6 +3,8 @@
 <%= form_tag(parse_query_url, method: "post", remote: true) do %>
   <%= hidden_field_tag :latitude, "" %>
   <%= hidden_field_tag :longitude, "" %>
+  <%= hidden_field_tag :radius, "" %>
+  <%= hidden_field_tag :categories, "" %>
   <%= text_field_tag :query, '', id: "input-box"%>
   <%= submit_tag "Submit"%>
 <% end %>
@@ -93,11 +95,9 @@ $( function() {
   $("form").submit(function() {
 	if ($("#input-box").val() != "") {
         // Send the message to all users.
-		$("#chatBox").html($("#chatBox").html() + "<br />");
-		$("#chatBox").html($("#chatBox").html() + "<div class='user'>User</div>: " + $("#input-box").val());
-        
+		$("#chatBox").html($("#chatBox").html() + "<br />"); 
         //chatBox.scrollTop = chatBox.scrollHeight;
-        
+		$("#chatBox").html($("#chatBox").html() + "User: " + $("#input-box").val());
     }
   });
   
