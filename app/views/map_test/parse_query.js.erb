@@ -1,8 +1,11 @@
 	// Reset the message input box.
-    $("#input-box").val("")
-    $("#input-box").focus();
     
-	$("#chatBox").html($("#chatBox").html() + "<br />" + "Food Finder: <%= escape_javascript @message %>")
+	if ($("#input-box").val() != "")
+	  $("#chatBox").html($("#chatBox").html() + "<br />" + "Food Finder: <%= escape_javascript @message.html_safe %>");
+	
+	$("#input-box").val("")
+    $("#input-box").focus();
+	$("#chatBox").animate({ scrollTop: "100%" });
 	
 	var infowindow = new google.maps.InfoWindow({
         content: ''

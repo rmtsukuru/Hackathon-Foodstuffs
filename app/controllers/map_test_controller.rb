@@ -11,34 +11,57 @@ class MapTestController < ApplicationController
 
   def parse_query
     # Parsing code goes here
-    radius = (5 * 1609.34).to_i
+	@message = "Here are some restaurant that you may like.  <br />"
+	getAmbDis = false
+	ambRadiusDef = 5
+    params[:radius] = (5 * 1609.34).to_i
     categories = []
     params[:query].gsub! /(#{yelp_categories.keys.join('|')})/i do |match|
       categories.push yelp_categories[match.downcase]
       ''
     end
-    distance_units = {meters: 1, kilometers: 1000, miles: 1609.34}
+	
+	params[:query].gsub! /(#{ambiguous_distance_keyword.join('|')})/i do |match|
+	  ambRadius (ambRadiusDef)
+	  getAmbDis = true
+	  ambRadiusDef += 1
+	end
+	
+    distance_units = {meter: 1, meters: 1, kilometer: 1000, kilometers: 1000, mile: 1609.34, miles: 1609.34}
     params[:query].gsub!(/((\d*\.)?\d+)\s+(#{distance_units.keys.join('|')})/, '')
     if $1
-      radius = $1.to_f
+      params[:radius] = $1.to_f
       if distance_units.has_key? $3.to_sym
-        radius *= distance_units[$3.to_sym]
+        params[:radius] *= distance_units[$3.to_sym]
       end
+	  getAmbDis = false
     end
     params[:query].strip!
     params[:query].gsub!(/\s+/, ' ')
 	
-	if categories.empty? and radius.class == Fixnum
-	  @message = "Please provide more details about what you want to eat ╮(╯_╰)╭"
+	if categories.empty? and (params[:radius].class == Fixnum)
+	  @message = "Please provide more details about what you want to eat <br /> ╮(╯_╰)╭"
 	  params[:query] = "asdfasdf"
 	end
+
     limit = 10
-    puts "Query: #{params[:query]}  Radius: #{radius}"
+    puts "Query: #{params[:query]}  Radius: #{params[:radius]}"
     access_token = OAuthAccessor.access_token
     
-    path = "/v2/search?term=#{URI::encode params[:query]}&ll=#{params[:latitude]},#{params[:longitude]}&radius_filter=#{radius.to_i}&limit=#{limit}&category_filter=#{categories.join(',')}"
-
+    path = "/v2/search?term=#{URI::encode params[:query]}&ll=#{params[:latitude]},#{params[:longitude]}&radius_filter=#{params[:radius].to_i}&limit=#{limit}&category_filter=#{categories.join(',')}"
     @results = JSON.parse(access_token.get(path).body)
+	
+	if getAmbDis
+	  while @results['total'].to_i < 10 && ambRadiusDef <= 8
+	    puts @results['total']
+		puts ambRadiusDef
+	    ambRadius (ambRadiusDef)
+	    path = "/v2/search?term=#{URI::encode params[:query]}&ll=#{params[:latitude]},#{params[:longitude]}&radius_filter=#{params[:radius].to_i}&limit=#{limit}&category_filter=#{categories.join(',')}"
+		@results = JSON.parse(access_token.get(path).body)
+		ambRadiusDef += 1
+      end
+	end
+	
     @results['businesses'].each do |business|
       address = URI::encode("#{business['location']['address'].join(', ')}, #{business['location']['city']}, #{business['location']['state_code']}")
       require 'open-uri'
@@ -52,12 +75,21 @@ class MapTestController < ApplicationController
       format.js
     end
   end
-
-  private
+  
+  
+  
+  def ambRadius (dist)
+      params[:radius] = (dist * 1609.34)
+	  @message = "We find some restaurant within #{dist} miles. <br />"
+  end
+  
+  
 
   def yelp_categories
     {"bagels"=>"bagels", "bakeries"=>"bakeries", "beer, wine & spirits"=>"beer_and_wine", "breweries"=>"breweries", "bubble tea"=>"bubbletea", "butcher"=>"butcher", "csa"=>"csa", "coffee & tea"=>"coffee", "convenience stores"=>"convenience", "desserts"=>"desserts", "do-it-yourself food"=>"diyfood", "donuts"=>"donuts", "farmers market"=>"farmersmarket", "food delivery services"=>"fooddeliveryservices", "food trucks"=>"foodtrucks", "gelato"=>"gelato", "grocery"=>"grocery", "ice cream & frozen yogurt"=>"icecream", "internet cafes"=>"internetcafe", "juice bars & smoothies"=>"juicebars", "pretzels"=>"pretzels", "shaved ice"=>"shavedice", "specialty food"=>"gourmet", "candy stores"=>"candy", "cheese shops"=>"cheese", "chocolatiers & shops"=>"chocolate", "ethnic food"=>"ethnicmarkets", "fruits & veggies"=>"markets", "health markets"=>"healthmarkets", "herbs & spices"=>"herbsandspices", "meat shops"=>"meats", "seafood markets"=>"seafoodmarkets", "street vendors"=>"streetvendors", "tea rooms"=>"tea", "wineries"=>"wineries", "afghan"=>"afghani", "african"=>"african", "senegalese"=>"senegalese", "south african"=>"southafrican", "american (new)"=>"newamerican", "american (traditional)"=>"tradamerican", "arabian"=>"arabian", "argentine"=>"argentine", "armenian"=>"armenian", "asian fusion"=>"asianfusion", "australian"=>"australian", "austrian"=>"austrian", "bangladeshi"=>"bangladeshi", "barbeque"=>"bbq", "basque"=>"basque", "belgian"=>"belgian", "brasseries"=>"brasseries", "brazilian"=>"brazilian", "breakfast & brunch"=>"breakfast_brunch", "british"=>"british", "buffets"=>"buffets", "burgers"=>"burgers", "burmese"=>"burmese", "cafes"=>"cafes", "cafeteria"=>"cafeteria", "cajun/creole"=>"cajun", "cambodian"=>"cambodian", "caribbean"=>"caribbean", "dominican"=>"dominican", "haitian"=>"haitian", "puerto rican"=>"puertorican", "trinidadian"=>"trinidadian", "catalan"=>"catalan", "cheesesteaks"=>"cheesesteaks", "chicken wings"=>"chicken_wings", "chinese"=>"chinese", "cantonese"=>"cantonese", "dim sum"=>"dimsum", "shanghainese"=>"shanghainese", "szechuan"=>"szechuan", "comfort food"=>"comfortfood", "creperies"=>"creperies", "cuban"=>"cuban", "czech"=>"czech", "delis"=>"delis", "diners"=>"diners", "ethiopian"=>"ethiopian", "fast food"=>"hotdogs", "filipino"=>"filipino", "fish & chips"=>"fishnchips", "fondue"=>"fondue", "food court"=>"food_court", "food stands"=>"foodstands", "french"=>"french", "gastropubs"=>"gastropubs", "german"=>"german", "gluten-free"=>"gluten_free", "greek"=>"greek", "halal"=>"halal", "hawaiian"=>"hawaiian", "himalayan/nepalese"=>"himalayan", "hot dogs"=>"hotdog", "hot pot"=>"hotpot", "hungarian"=>"hungarian", "iberian"=>"iberian", "indian"=>"indpak", "indonesian"=>"indonesian", "irish"=>"irish", "italian"=>"italian", "japanese"=>"japanese", "korean"=>"korean", "kosher"=>"kosher", "laotian"=>"laotian", "latin american"=>"latin", "colombian"=>"colombian", "salvadoran"=>"salvadoran", "venezuelan"=>"venezuelan", "live/raw food"=>"raw_food", "malaysian"=>"malaysian", "mediterranean"=>"mediterranean", "mexican"=>"mexican", "middle eastern"=>"mideastern", "egyptian"=>"egyptian", "lebanese"=>"lebanese", "modern european"=>"modern_european", "mongolian"=>"mongolian", "moroccan"=>"moroccan", "pakistani"=>"pakistani", "persian/iranian"=>"persian", "peruvian"=>"peruvian", "pizza"=>"pizza", "polish"=>"polish", "portuguese"=>"portuguese", "russian"=>"russian", "salad"=>"salad", "sandwiches"=>"sandwiches", "scandinavian"=>"scandinavian", "scottish"=>"scottish", "seafood"=>"seafood", "singaporean"=>"singaporean", "slovakian"=>"slovakian", "soul food"=>"soulfood", "soup"=>"soup", "southern"=>"southern", "spanish"=>"spanish", "steakhouses"=>"steak", "sushi bars"=>"sushi", "taiwanese"=>"taiwanese", "tapas bars"=>"tapas", "tapas/small plates"=>"tapasmallplates", "tex-mex"=>"tex-mex", "thai"=>"thai", "turkish"=>"turkish", "ukrainian"=>"ukrainian", "vegan"=>"vegan", "vegetarian"=>"vegetarian", "vietnamese"=>"vietnamese"}
   end
   
-  
+  def ambiguous_distance_keyword
+    ["far", "close"]
+  end
 end
