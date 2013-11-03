@@ -22,10 +22,11 @@ class MapTestController < ApplicationController
     end
     params[:query].strip!
     params[:query].gsub!(/\s+/, ' ')
+    limit = 10
     puts "Query: #{params[:query]}  Radius: #{radius}"
     access_token = OAuthAccessor.access_token
     
-    path = "/v2/search?term=#{URI::encode(params[:query])}&ll=#{params[:latitude]},#{params[:longitude]}&radius_filter=#{radius.to_i}"
+    path = "/v2/search?term=#{URI::encode(params[:query])}&ll=#{params[:latitude]},#{params[:longitude]}&radius_filter=#{radius.to_i}&limit=#{limit}"
 
     @results = JSON.parse(access_token.get(path).body)
     @results['businesses'].each do |business|
