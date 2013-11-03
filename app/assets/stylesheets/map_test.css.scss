@@ -31,12 +31,16 @@ body{
 
 #chatBox {
 	font-family:tahoma;
-	font-size:12px;
+	font-size:20px;
 	color:black;
 	border: 1px teal solid;
 	height: 580px;
 	width: 320px;
-	overflow: scroll;
+	padding:3px;
+	word-break: normal;
+	overflow-y: auto;
+	font-weight:bold;
+	font-family: Tahoma, Verdana, Segoe, sans-serif;
 
 }
 
@@ -49,4 +53,13 @@ body{
 	font-family:"Times New Roman", Times, serif;
 }
 
+.user{
+	font-size:20px;
+	font-weight: bold;
+	color:#6699CC;
+}
 
+.food-finder{
+	font-size:20px;
+	font-weight: bold;
+}
