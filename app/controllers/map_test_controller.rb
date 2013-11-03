@@ -12,11 +12,12 @@ class MapTestController < ApplicationController
   def parse_query
     # Parsing code goes here
     radius = 5000
-    params[:query].gsub!(/(\d+) meters/, '')
+    params[:query].gsub!(/(\d+)\s+meters/, '')
     if $1
       radius = $1
     end
     params[:query].strip!
+    params[:query].gsub!(/\s+/, ' ')
     puts "Query: #{params[:query]}"
     access_token = OAuthAccessor.access_token
     
