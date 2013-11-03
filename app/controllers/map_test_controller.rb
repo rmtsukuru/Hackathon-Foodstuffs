@@ -12,10 +12,10 @@ class MapTestController < ApplicationController
   def parse_query
     # Parsing code goes here
     radius = 5000
-    params[:query].gsub!(/(\d+)\s+(meters|kilometers|miles)/, '')
+    params[:query].gsub!(/((\d*\.)?\d+)\s+(meters|kilometers|miles)/, '')
     if $1
       radius = $1.to_f
-      case $2
+      case $3
       when 'kilometers'
         radius *= 1000
       when 'miles'
