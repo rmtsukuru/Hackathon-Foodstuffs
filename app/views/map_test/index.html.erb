@@ -18,7 +18,7 @@
   var map;
   var Latitude;
   var Longitude;
-
+  
 function initialize() {
   var mapOptions = {
     zoom: 12,
@@ -34,10 +34,18 @@ function initialize() {
 	    $("form input[name='longitude']").val(Longitude);
         var pos = new google.maps.LatLng(Latitude,Longitude);
 
-        var marker = new google.maps.Marker({
-        map: map,
-        position: pos
-      });
+		var marker = new google.maps.Marker({
+			position: pos,
+			map: map,
+			icon: 'http://i998.photobucket.com/albums/af101/summer2028/happy_face_zpse1da03a3.png'
+		});
+		var currentPosInfo = new google.maps.InfoWindow({
+			content: 'You are here!'
+		});
+		currentPosInfo.open(map,marker);
+		google.maps.event.addListener(marker, 'click', function() {
+			currentPosInfo.open(map,marker);
+		});
 
       map.setCenter(pos);
     }, function() {
@@ -51,19 +59,25 @@ function initialize() {
 
 function handleNoGeolocation(errorFlag) {
   if (errorFlag) {
-    //var content = 'Please allow your browser to share your location. Or let me tell you, Chinese food is the best. Go to Beijing!';
+    var content = 'Please allow your browser to share your location. Or let me tell you, Chinese food is the best. Go to Beijing!';
   } else {
-    //var content = 'Error: Your browser doesn\'t support geolocation.';
+    var content = 'Error: Your browser doesn\'t support geolocation.';
   }
 
-  var options = {
-    map: map,
-    position: new google.maps.LatLng(39.9, 116.4),
-    content: content
-  };
-
-  var infowindow = new google.maps.InfoWindow(options);
-  map.setCenter(options.position);
+  var noGeoMarker = new google.maps.Marker({
+	map: map,
+	position: new google.maps.LatLng(39.9, 116.385),
+	icon: 'http://i998.photobucket.com/albums/af101/summer2028/beijing-face_zps08ba53fc.png'
+  });
+  
+  var errorInfo = new google.maps.InfoWindow({
+	content: content
+  });
+  errorInfo.open(map,noGeoMarker);
+  google.maps.event.addListener(noGeoMarker, 'click', function() {
+	  errorInfo.open(map,noGeoMarker);
+  });
+  map.setCenter(new google.maps.LatLng(39.9, 116.4));
 }
 
   google.maps.event.addDomListener(window, 'load', initialize);
