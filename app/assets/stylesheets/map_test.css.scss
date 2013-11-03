@@ -36,7 +36,9 @@ body{
 	border: 1px teal solid;
 	height: 580px;
 	width: 320px;
-	overflow: scroll;
+	padding:3px;
+	word-break: normal;
+	overflow-y: auto;
 
 }
 
@@ -49,4 +51,8 @@ body{
 	font-family:"Times New Roman", Times, serif;
 }
 
+.user{
+	float: left;
+	font-weight: bold
+}
 
