@@ -1,4 +1,10 @@
-      var infowindow = new google.maps.InfoWindow({
+	// Reset the message input box.
+    $("#input-box").val("")
+    $("#input-box").focus();
+    
+	$("#chatBox").html($("#chatBox").html() + "<br />" + "Food Finder: <%= escape_javascript @message %>")
+	
+	var infowindow = new google.maps.InfoWindow({
         content: ''
       });
       $.each(markers, function(index, value) {
@@ -26,3 +32,5 @@
 	});
 	markers.push(marker);
       <% end %>
+	  
+	

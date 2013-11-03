@@ -1,10 +1,10 @@
 <div id="user-input">
-<div id="chatBox">hello!</div>
+<div id="chatBox">Food Finder: Hello!</div>
 <%= form_tag(parse_query_url, method: "post", remote: true) do %>
   <%= hidden_field_tag :latitude, "" %>
   <%= hidden_field_tag :longitude, "" %>
   <%= text_field_tag :query, '', id: "input-box"%>
-  <%= submit_tag "Submit" %>
+  <%= submit_tag "Submit"%>
 <% end %>
 </div>
 
@@ -22,6 +22,9 @@
   var Latitude;
   var Longitude;
   var markers = new Array();
+  var chatBox;
+  var submitButton;
+  var messageInput;
   
 function initialize() {
   var mapOptions = {
@@ -59,6 +62,7 @@ function initialize() {
     // Browser doesn't support Geolocation
     handleNoGeolocation(false);
   }
+  
 }
 
 function handleNoGeolocation(errorFlag) {
@@ -83,6 +87,21 @@ function handleNoGeolocation(errorFlag) {
   });
   map.setCenter(new google.maps.LatLng(39.9, 116.4));
 }
+
+
+$( function() {
+  $("form").submit(function() {
+	if ($("#input-box").val() != "") {
+        // Send the message to all users.
+		$("#chatBox").html($("#chatBox").html() + "<br />");
+		$("#chatBox").html($("#chatBox").html() + "User: " + $("#input-box").val());
+        
+        //chatBox.scrollTop = chatBox.scrollHeight;
+        
+    }
+  });
+  
+});
 
   google.maps.event.addDomListener(window, 'load', initialize);
 </script>
