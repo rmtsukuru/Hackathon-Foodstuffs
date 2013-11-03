@@ -1,9 +1,11 @@
-<div id="user-input"><%= form_tag(parse_query_url, method: "post") do %>
+<div id="user-input">
+<div id="chatBox"></div>
+<%= form_tag(parse_query_url, method: "post") do %>
   <%= text_field_tag :query, '', id: "input-box"%>
   <%= submit_tag "Submit" %>
 <% end %>
-
 </div>
+
 <div id="map-container">
   <div id="map-canvas" style="height: 100%;">
   </div>
