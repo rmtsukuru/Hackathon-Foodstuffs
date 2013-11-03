@@ -11,7 +11,7 @@ class MapTestController < ApplicationController
 
   def parse_query
     # Parsing code goes here
-	@message = "Here are some restaurant that you may like.  <br />"
+	@message = "Some restaurants that you may like are shown on the map.<br />"
 	getAmbDis = false
 	ambRadiusDef = 5
     params[:radius] = (5 * 1609.34).to_i
@@ -106,6 +106,6 @@ class MapTestController < ApplicationController
   end
   
   def ambiguous_distance_keyword
-    ["far", "close"]
+    ["far", "close", "around", "away", "block", "long", "short"]
   end
 end
