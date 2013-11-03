@@ -19,7 +19,7 @@ class MapTestController < ApplicationController
     @results['businesses'].each do |business|
       address = URI::encode("#{business['location']['address'].join(', ')}, #{business['location']['city']}, #{business['location']['state_code']}")
       require 'open-uri'
-      geocode = JSON.parse(open("https://maps.googleapis.com/maps/api/geocode/json?address=#{address}&sensor=true").read)
+      geocode = JSON.parse(open("http://maps.googleapis.com/maps/api/geocode/json?address=#{address}&sensor=true").read)
       business['location']['latitude'] = geocode['results'].first['geometry']['location']['lat']
       business['location']['longitude'] = geocode['results'].first['geometry']['location']['lng']
     end
