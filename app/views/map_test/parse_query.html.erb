@@ -5,17 +5,6 @@
   </div>
 </div>
 
-<% @results['businesses'].each do |business| %>
-<div>
-  <%= link_to business['name'], business['url'] %>
-  <%= image_tag business['image_url'] %><br />
-  <%= business['rating'] %> out of 5<br />
-  <%= business['location']['address'].join(" ") %><br />
-  <%= business['display_phone'] %><br />
-  <p><%= business['snippet_text'] %></p>
-</div><br />
-<% end %>
-
 <script type="text/javascript"
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByVkwWVJFsocv7FpCsCkdoY7K3z6yibw8&sensor=true">
 </script>
