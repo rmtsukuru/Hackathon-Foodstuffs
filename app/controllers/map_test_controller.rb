@@ -11,13 +11,16 @@ class MapTestController < ApplicationController
 
   def parse_query
     # Parsing code goes here
-	radius = 5000
-	if match = params[:query].match(/(\d+) meters/)
-	  radius = match[1]
-	end
+    radius = 5000
+    params[:query].gsub!(/(\d+) meters/, '')
+    if $1
+      radius = $1
+    end
+    params[:query].strip!
+    puts "Query: #{params[:query]}"
     access_token = OAuthAccessor.access_token
     
-    path = "/v2/search?term=#{URI::encode(params[:query])}&ll=#{params[:latitude]},#{params[:longitude]}&#{radius}"
+    path = "/v2/search?term=#{URI::encode(params[:query])}&ll=#{params[:latitude]},#{params[:longitude]}&radius_filter=#{radius}"
 
     @results = JSON.parse(access_token.get(path).body)
     @results['businesses'].each do |business|
