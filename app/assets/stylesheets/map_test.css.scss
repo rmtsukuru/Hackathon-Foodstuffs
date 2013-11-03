@@ -31,7 +31,7 @@ body{
 
 #chatBox {
 	font-family:tahoma;
-	font-size:12px;
+	font-size:20px;
 	color:black;
 	border: 1px teal solid;
 	height: 580px;
@@ -39,6 +39,8 @@ body{
 	padding:3px;
 	word-break: normal;
 	overflow-y: auto;
+	font-weight:bold;
+	font-family: Tahoma, Verdana, Segoe, sans-serif;
 
 }
 
@@ -52,7 +54,12 @@ body{
 }
 
 .user{
-	float: left;
-	font-weight: bold
+	font-size:20px;
+	font-weight: bold;
+	color:#6699CC;
 }
 
+.food-finder{
+	font-size:20px;
+	font-weight: bold;
+}

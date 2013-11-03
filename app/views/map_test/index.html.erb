@@ -1,5 +1,5 @@
 <div id="user-input">
-<div id="chatBox">Food Finder: Hello!</div>
+<div id="chatBox">Food Finder: Hello!<br/></div>
 <%= form_tag(parse_query_url, method: "post", remote: true) do %>
   <%= hidden_field_tag :latitude, "" %>
   <%= hidden_field_tag :longitude, "" %>
@@ -30,7 +30,7 @@
   
 function initialize() {
   var mapOptions = {
-    zoom: 12,
+    zoom: 15,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
   map = new google.maps.Map(document.getElementById('map-canvas'),
@@ -97,7 +97,7 @@ $( function() {
         // Send the message to all users.
 		$("#chatBox").html($("#chatBox").html() + "<br />"); 
         //chatBox.scrollTop = chatBox.scrollHeight;
-		$("#chatBox").html($("#chatBox").html() + "User: " + $("#input-box").val());
+		$("#chatBox").html($("#chatBox").html() + "<div class='user'>User: " + $("#input-box").val()+"</div>");
     }
   });
   
