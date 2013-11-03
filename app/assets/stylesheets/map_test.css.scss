@@ -2,8 +2,12 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+body{
+	overflow-y:auto;
+}
+
 #map-container {
-	position: fixed;
+	position:absolute;
 	top: 20px;
 	left: 20px;
     height: 600px;
@@ -12,10 +16,12 @@
 	border:5px solid #6699CC;
 }
 #user-input {
-	position: fixed;
+	position:absolute;
 	top: 20px;
 	right: 40px;
 	margin:10px;
+	margin-right: 10px;
+	z-index: 9;
 }
 
 #input-box {
@@ -34,7 +40,13 @@
 
 }
 
+#footer{
+	position:absolute;
+	bottom:0px;
+}
 
-
+#copyright{
+	font-family:"Times New Roman", Times, serif;
+}
 
 
