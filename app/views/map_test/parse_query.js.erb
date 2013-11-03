@@ -16,7 +16,8 @@
 	  var text = '<%= link_to business['name'], business['url'] %><br />' +
                      '<%= business['rating'] %> out of 5<br />' +
                      '<%= business['location']['address'].join(" ") %><br />' +
-                     '<%= business['display_phone'] %>';
+                     '<%= business['display_phone'] %>' + '<br />' +
+		     "<ul><%= business['categories'].collect{|x| '<li>' + x.first + '</li>' }.join('').html_safe if business['categories'] %></ul>";
 	  infowindow.setOptions({
 	    content: text
 	  });
