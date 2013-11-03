@@ -1,1 +1,86 @@
-<p><%= @query %></p>
+<h3><%= @results['total'] %> Results Found</h3>
+
+<div id="map-container">
+  <div id="map-canvas" style="height: 100%;">
+  </div>
+</div>
+
+<% @results['businesses'].each do |business| %>
+<div>
+  <%= link_to business['name'], business['url'] %>
+  <%= image_tag business['image_url'] %><br />
+  <%= business['rating'] %> out of 5<br />
+  <%= business['location']['address'].join(" ") %><br />
+  <%= business['display_phone'] %><br />
+  <p><%= business['snippet_text'] %></p>
+</div><br />
+<% end %>
+
+<script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByVkwWVJFsocv7FpCsCkdoY7K3z6yibw8&sensor=true">
+</script>
+<script type="text/javascript">
+  var map;
+  var Latitude;
+  var Longitude;
+
+function initialize() {
+  var mapOptions = {
+    zoom: 12,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+
+  // Try HTML5 geolocation
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+	    Latitude=position.coords.latitude;
+	    Longitude=position.coords.longitude;
+	    $("form input[name='latitude']").val(Latitude);
+	    $("form input[name='longitude']").val(Longitude);
+        var pos = new google.maps.LatLng(Latitude,Longitude);
+
+        var infowindow = new google.maps.InfoWindow({
+        map: map,
+        position: pos,
+        content: 'You are here!'
+      });
+
+      map.setCenter(pos);
+
+      <% @results['businesses'].each do |business| %>
+        new google.maps.Marker({
+	  position: new google.maps.LatLng(<%= business['location']['latitude'] %>, <%= business['location']['longitude'] %>),
+	  map: map,
+	  title: "<%= business['name'] %>"
+	});
+      <% end %>
+    }, function() {
+      handleNoGeolocation(true);
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    handleNoGeolocation(false);
+  }
+}
+
+function handleNoGeolocation(errorFlag) {
+  if (errorFlag) {
+    var content = 'Please allow your browser to share your location. Or let me tell you, Chinese food is the best. Go to Beijing!';
+  } else {
+    var content = 'Error: Your browser doesn\'t support geolocation.';
+  }
+
+  var options = {
+    map: map,
+    position: new google.maps.LatLng(39.9, 116.4),
+    content: content
+  };
+
+  var infowindow = new google.maps.InfoWindow(options);
+  map.setCenter(options.position);
+}
+
+  google.maps.event.addDomListener(window, 'load', initialize);
+</script>

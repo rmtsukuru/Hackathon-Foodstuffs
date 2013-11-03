@@ -1,4 +1,6 @@
 <div id="user-input"><%= form_tag(parse_query_url, method: "post") do %>
+  <%= hidden_field_tag :latitude, "" %>
+  <%= hidden_field_tag :longitude, "" %>
   <%= text_field_tag :query, '', id: "input-box"%>
   <%= submit_tag "Submit" %>
 <% end %>
@@ -28,6 +30,8 @@ function initialize() {
     navigator.geolocation.getCurrentPosition(function(position) {
 	    Latitude=position.coords.latitude;
 	    Longitude=position.coords.longitude;
+	    $("form input[name='latitude']").val(Latitude);
+	    $("form input[name='longitude']").val(Longitude);
         var pos = new google.maps.LatLng(Latitude,Longitude);
 
 		var marker = new google.maps.Marker({
