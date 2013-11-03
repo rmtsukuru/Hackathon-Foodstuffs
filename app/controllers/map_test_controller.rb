@@ -11,7 +11,7 @@ class MapTestController < ApplicationController
 
   def parse_query
     # Parsing code goes here
-    radius = 5000
+    radius = (5 * 1609.34).to_i
     categories = []
     params[:query].gsub! /(#{yelp_categories.keys.join('|')})/i do |match|
       categories.push yelp_categories[match.downcase]
@@ -27,11 +27,16 @@ class MapTestController < ApplicationController
     end
     params[:query].strip!
     params[:query].gsub!(/\s+/, ' ')
+	
+	if categories.empty? and radius.class == Fixnum
+	  @message = "Please provide more details about what you want to eat ╮(╯_╰)╭"
+	  params[:query] = "asdfasdf"
+	end
     limit = 10
     puts "Query: #{params[:query]}  Radius: #{radius}"
     access_token = OAuthAccessor.access_token
     
-    path = "/v2/search?term=#{URI::encode(params[:query])}&ll=#{params[:latitude]},#{params[:longitude]}&radius_filter=#{radius.to_i}&limit=#{limit}&category_filter=#{categories.join(',')}"
+    path = "/v2/search?term=#{URI::encode params[:query]}&ll=#{params[:latitude]},#{params[:longitude]}&radius_filter=#{radius.to_i}&limit=#{limit}&category_filter=#{categories.join(',')}"
 
     @results = JSON.parse(access_token.get(path).body)
     @results['businesses'].each do |business|
@@ -53,4 +58,6 @@ class MapTestController < ApplicationController
   def yelp_categories
     {"bagels"=>"bagels", "bakeries"=>"bakeries", "beer, wine & spirits"=>"beer_and_wine", "breweries"=>"breweries", "bubble tea"=>"bubbletea", "butcher"=>"butcher", "csa"=>"csa", "coffee & tea"=>"coffee", "convenience stores"=>"convenience", "desserts"=>"desserts", "do-it-yourself food"=>"diyfood", "donuts"=>"donuts", "farmers market"=>"farmersmarket", "food delivery services"=>"fooddeliveryservices", "food trucks"=>"foodtrucks", "gelato"=>"gelato", "grocery"=>"grocery", "ice cream & frozen yogurt"=>"icecream", "internet cafes"=>"internetcafe", "juice bars & smoothies"=>"juicebars", "pretzels"=>"pretzels", "shaved ice"=>"shavedice", "specialty food"=>"gourmet", "candy stores"=>"candy", "cheese shops"=>"cheese", "chocolatiers & shops"=>"chocolate", "ethnic food"=>"ethnicmarkets", "fruits & veggies"=>"markets", "health markets"=>"healthmarkets", "herbs & spices"=>"herbsandspices", "meat shops"=>"meats", "seafood markets"=>"seafoodmarkets", "street vendors"=>"streetvendors", "tea rooms"=>"tea", "wineries"=>"wineries", "afghan"=>"afghani", "african"=>"african", "senegalese"=>"senegalese", "south african"=>"southafrican", "american (new)"=>"newamerican", "american (traditional)"=>"tradamerican", "arabian"=>"arabian", "argentine"=>"argentine", "armenian"=>"armenian", "asian fusion"=>"asianfusion", "australian"=>"australian", "austrian"=>"austrian", "bangladeshi"=>"bangladeshi", "barbeque"=>"bbq", "basque"=>"basque", "belgian"=>"belgian", "brasseries"=>"brasseries", "brazilian"=>"brazilian", "breakfast & brunch"=>"breakfast_brunch", "british"=>"british", "buffets"=>"buffets", "burgers"=>"burgers", "burmese"=>"burmese", "cafes"=>"cafes", "cafeteria"=>"cafeteria", "cajun/creole"=>"cajun", "cambodian"=>"cambodian", "caribbean"=>"caribbean", "dominican"=>"dominican", "haitian"=>"haitian", "puerto rican"=>"puertorican", "trinidadian"=>"trinidadian", "catalan"=>"catalan", "cheesesteaks"=>"cheesesteaks", "chicken wings"=>"chicken_wings", "chinese"=>"chinese", "cantonese"=>"cantonese", "dim sum"=>"dimsum", "shanghainese"=>"shanghainese", "szechuan"=>"szechuan", "comfort food"=>"comfortfood", "creperies"=>"creperies", "cuban"=>"cuban", "czech"=>"czech", "delis"=>"delis", "diners"=>"diners", "ethiopian"=>"ethiopian", "fast food"=>"hotdogs", "filipino"=>"filipino", "fish & chips"=>"fishnchips", "fondue"=>"fondue", "food court"=>"food_court", "food stands"=>"foodstands", "french"=>"french", "gastropubs"=>"gastropubs", "german"=>"german", "gluten-free"=>"gluten_free", "greek"=>"greek", "halal"=>"halal", "hawaiian"=>"hawaiian", "himalayan/nepalese"=>"himalayan", "hot dogs"=>"hotdog", "hot pot"=>"hotpot", "hungarian"=>"hungarian", "iberian"=>"iberian", "indian"=>"indpak", "indonesian"=>"indonesian", "irish"=>"irish", "italian"=>"italian", "japanese"=>"japanese", "korean"=>"korean", "kosher"=>"kosher", "laotian"=>"laotian", "latin american"=>"latin", "colombian"=>"colombian", "salvadoran"=>"salvadoran", "venezuelan"=>"venezuelan", "live/raw food"=>"raw_food", "malaysian"=>"malaysian", "mediterranean"=>"mediterranean", "mexican"=>"mexican", "middle eastern"=>"mideastern", "egyptian"=>"egyptian", "lebanese"=>"lebanese", "modern european"=>"modern_european", "mongolian"=>"mongolian", "moroccan"=>"moroccan", "pakistani"=>"pakistani", "persian/iranian"=>"persian", "peruvian"=>"peruvian", "pizza"=>"pizza", "polish"=>"polish", "portuguese"=>"portuguese", "russian"=>"russian", "salad"=>"salad", "sandwiches"=>"sandwiches", "scandinavian"=>"scandinavian", "scottish"=>"scottish", "seafood"=>"seafood", "singaporean"=>"singaporean", "slovakian"=>"slovakian", "soul food"=>"soulfood", "soup"=>"soup", "southern"=>"southern", "spanish"=>"spanish", "steakhouses"=>"steak", "sushi bars"=>"sushi", "taiwanese"=>"taiwanese", "tapas bars"=>"tapas", "tapas/small plates"=>"tapasmallplates", "tex-mex"=>"tex-mex", "thai"=>"thai", "turkish"=>"turkish", "ukrainian"=>"ukrainian", "vegan"=>"vegan", "vegetarian"=>"vegetarian", "vietnamese"=>"vietnamese"}
   end
+  
+  
 end
