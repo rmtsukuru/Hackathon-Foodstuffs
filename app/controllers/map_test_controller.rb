@@ -14,6 +14,14 @@ class MapTestController < ApplicationController
 	@message = "Here are some restaurant that you may like.  <br />"
 	getAmbDis = false
 	ambRadiusDef = 5
+
+    price_words = { cheap: 1..1, inexpensive: 2..2, expensive: 3..3, exorbitant: 4..4, ludicrous: 4..4 }
+    price_range = nil
+    params[:query].gsub! /(#{price_words.keys.join('|')})/i do |match|
+      price_range = price_words[match.to_sym]
+      ''
+    end
+
     params[:radius] = (5 * 1609.34).to_i
     categories = []
     params[:query].gsub! /(#{yelp_categories.keys.join('|')})/i do |match|
@@ -71,10 +79,19 @@ class MapTestController < ApplicationController
 		ambRadiusDef += 1
       end
 	end
+
+    require 'open-uri'
+    require 'nokogiri'
+    if price_range
+      @results['businesses'].select! do |business|
+        doc = Nokogiri::HTML(open(business['url'], 'User-Agent' => 'ruby'))
+	price = doc.search('#price_tip').text.count '$'
+        price_range.include? price
+      end
+    end
 	
     @results['businesses'].each do |business|
       address = URI::encode("#{business['location']['address'].join(', ')}, #{business['location']['city']}, #{business['location']['state_code']}")
-      require 'open-uri'
       geocode = JSON.parse(open("http://maps.googleapis.com/maps/api/geocode/json?address=#{address}&sensor=true").read)
       business['location']['latitude'] = geocode['results'].first['geometry']['location']['lat']
       business['location']['longitude'] = geocode['results'].first['geometry']['location']['lng']
