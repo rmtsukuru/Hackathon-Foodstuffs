@@ -1,6 +1,8 @@
 HackathonFoodstuffs::Application.routes.draw do
   root 'map_test#index'
 
+  get 'categories' => 'map_test#list_categories'
+
   post 'parse' => 'map_test#parse_query', as: 'parse_query'
 
   # The priority is based upon order of creation: first created -> highest priority.
